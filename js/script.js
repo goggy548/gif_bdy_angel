@@ -281,3 +281,45 @@ document.querySelectorAll('.modal').forEach((modal) => {
     }
   });
 })();
+// UNIVERSAL CLOSE BUTTON FIX
+document.addEventListener('click', function(event) {
+    const button = event.target.closest('button');
+
+    if (!button) return;
+
+    const buttonText = button.textContent.trim();
+    const label = (
+        button.getAttribute('aria-label') ||
+        button.getAttribute('title') ||
+        ''
+    ).toLowerCase();
+
+    if (
+        buttonText === '×' ||
+        buttonText === '✕' ||
+        label.includes('close')
+    ) {
+        const openModals = document.querySelectorAll(
+            '.modal.open, [role="dialog"].open'
+        );
+
+        openModals.forEach(function(modal) {
+            modal.classList.remove('open');
+            modal.setAttribute('aria-hidden', 'true');
+        });
+
+        document.body.style.overflow = '';
+    }
+});
+
+// ESC KEY CLOSE FIX
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        document.querySelectorAll('.modal.open').forEach(function(modal) {
+            modal.classList.remove('open');
+            modal.setAttribute('aria-hidden', 'true');
+        });
+
+        document.body.style.overflow = '';
+    }
+});
